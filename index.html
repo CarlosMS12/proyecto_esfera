@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Para ti... ✨</title>
+		<!-- Fuente Pixel Art y Fuente Legible -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=VT323&family=Poppins:wght@300;400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--bg-top: #000308;
+				--bg-mid: #050515;
+				--bg-bot: #0d0625;
+				--glass-border: rgba(255, 255, 255, 0.5);
+				--snow-color: #ffffff;
+				--gift-glow: rgba(100, 200, 255, 0.8);
+				--evcode-cyan: #00d4ff;
+				--evcode-blue: #090979;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				background: linear-gradient(
+					135deg,
+					var(--bg-top) 0%,
+					var(--bg-mid) 50%,
+					var(--bg-bot) 100%
+				);
+				min-height: 100vh;
+				width: 100vw;
+				overflow-x: hidden;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				font-family: 'Poppins', sans-serif;
+				color: white;
+				position: relative;
+			}
+
+			/* --- Estrellas de Fondo --- */
+			.stars {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+
+			.star {
+				position: absolute;
+				background: white;
+				border-radius: 50%;
+				animation: twinkle 3s infinite ease-in-out;
+			}
+
+			@keyframes twinkle {
+				0%,
+				100% {
+					opacity: 0.3;
+				}
+				50% {
+					opacity: 1;
+				}
+			}
+
+			/* --- Estrella Secreta (Easter Egg) --- */
+			.secret-star {
+				position: fixed;
+				width: 4px;
+				height: 4px;
+				background: #ffb3d9;
+				border-radius: 50%;
+				top: 15%;
+				right: 12%;
+				cursor: pointer;
+				animation: secretTwinkle 2s infinite ease-in-out;
+				z-index: 1;
+				box-shadow: 0 0 8px rgba(255, 179, 217, 0.6);
+				transition: all 0.3s ease;
+			}
+
+			.secret-star:hover {
+				transform: scale(2);
+				box-shadow: 0 0 15px rgba(255, 179, 217, 1);
+			}
+
+			@keyframes secretTwinkle {
+				0%,
+				100% {
+					opacity: 0.5;
+					transform: scale(1);
+				}
+				50% {
+					opacity: 1;
+					transform: scale(1.3);
+				}
+			}
+
+			/* Ocultar estrella secreta en mobile */
+			@media (max-width: 768px) {
+				.secret-star {
+					display: none;
+				}
+			}
+
+			/* Regalo secreto flotante */
+			.secret-gift {
+				position: fixed;
+				width: 60px;
+				height: 60px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				pointer-events: none;
+				z-index: 50;
+				opacity: 0;
+				transform: scale(0);
+				transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				filter: drop-shadow(0 10px 20px rgba(255, 179, 217, 0.5));
+			}
+
+			.secret-gift.show {
+				opacity: 1;
+				transform: scale(1);
+				animation: secretFloat 2s ease-in-out;
+			}
+
+			@keyframes secretFloat {
+				0% {
+					transform: scale(0) rotate(-180deg);
+				}
+				50% {
+					transform: scale(1.2) rotate(10deg);
+				}
+				100% {
+					transform: scale(1) rotate(0deg);
+				}
+			}
+
+			/* --- Título --- */
+			.main-title {
+				font-family: 'VT323', monospace;
+				font-size: clamp(1.5rem, 5vw, 2.5rem);
+				text-align: center;
+				margin-bottom: 30px;
+				text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3),
+					0 0 30px rgba(0, 212, 255, 0.2);
+				z-index: 10;
+				animation: fadeInTitle 2s ease-in;
+				padding: 0 20px;
+				letter-spacing: 2px;
+			}
+
+			@keyframes fadeInTitle {
+				0% {
+					opacity: 0;
+					transform: translateY(-30px);
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			/* --- La Esfera de Nieve --- */
+			.snow-globe {
+				position: relative;
+				width: clamp(280px, 90vw, 350px);
+				height: clamp(280px, 90vw, 350px);
+				border-radius: 50%;
+				background: radial-gradient(
+					circle at 30% 30%,
+					rgba(255, 255, 255, 0.15),
+					rgba(255, 255, 255, 0.08) 50%,
+					rgba(0, 0, 0, 0.3)
+				);
+				border: 5px solid var(--glass-border);
+				box-shadow: 0 0 40px rgba(0, 212, 255, 0.4), 0 0 80px rgba(0, 212, 255, 0.2),
+					inset 0 0 50px rgba(255, 255, 255, 0.15);
+				overflow: hidden;
+				z-index: 5;
+				display: flex;
+				justify-content: center;
+				align-items: flex-end;
+				animation: globeFloat 6s ease-in-out infinite;
+			}
+
+			@keyframes globeFloat {
+				0%,
+				100% {
+					transform: translateY(0) scale(1);
+				}
+				50% {
+					transform: translateY(-10px) scale(1.02);
+				}
+			}
+
+			/* Reflejo del cristal */
+			.snow-globe::after {
+				content: '';
+				position: absolute;
+				top: 8%;
+				left: 18%;
+				width: 25%;
+				height: 12%;
+				border-radius: 50%;
+				background: rgba(255, 255, 255, 0.4);
+				filter: blur(3px);
+				transform: rotate(-45deg);
+				animation: shimmer 4s ease-in-out infinite;
+			}
+
+			@keyframes shimmer {
+				0%,
+				100% {
+					opacity: 0.4;
+				}
+				50% {
+					opacity: 0.7;
+				}
+			}
+
+			/* --- Nieve cayendo (Partículas CSS) --- */
+			.snowflake {
+				position: absolute;
+				top: -10px;
+				background-color: #fff;
+				border-radius: 50%;
+				opacity: 0.9;
+				animation: fall linear infinite;
+				box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+			}
+
+			@keyframes fall {
+				0% {
+					transform: translateY(0) rotate(0deg);
+					opacity: 0.9;
+				}
+				100% {
+					transform: translateY(380px) rotate(360deg);
+					opacity: 0.3;
+				}
+			}
+
+			/* --- Suelo de Nieve --- */
+			.ground {
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				height: 70px;
+				background: linear-gradient(to top, #c7ecee 0%, #ffffff 70%);
+				border-bottom-left-radius: 175px;
+				border-bottom-right-radius: 175px;
+				box-shadow: 0 -5px 20px rgba(255, 255, 255, 0.3),
+					inset 0 10px 20px rgba(255, 255, 255, 0.5);
+				z-index: 2;
+			}
+
+			/* Textura de nieve en el suelo */
+			.ground::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 20px;
+				background: linear-gradient(
+					90deg,
+					transparent 0%,
+					rgba(255, 255, 255, 0.5) 50%,
+					transparent 100%
+				);
+				border-radius: 50%;
+				filter: blur(2px);
+			}
+
+			/* --- Árbol de Navidad en el Centro --- */
+			.christmas-tree {
+				position: absolute;
+				bottom: 70px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: clamp(100px, 30vw, 150px);
+				height: auto;
+				z-index: 3;
+				filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+				animation: treeFloat 4s ease-in-out infinite;
+			}
+
+			@keyframes treeFloat {
+				0%,
+				100% {
+					transform: translateX(-50%) translateY(0);
+				}
+				50% {
+					transform: translateX(-50%) translateY(-8px);
+				}
+			}
+
+			/* --- Contenedor de Regalos --- */
+			.gifts-container {
+				position: absolute;
+				bottom: 30px;
+				display: flex;
+				justify-content: center;
+				gap: 15px;
+				z-index: 10;
+				width: 100%;
+				padding: 0 10px;
+			}
+
+			.gift {
+				width: clamp(45px, 15vw, 60px);
+				height: clamp(45px, 15vw, 60px);
+				cursor: pointer;
+				position: relative;
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.4));
+				border-radius: 10px;
+				will-change: transform, filter;
+				transition: filter 0.2s ease;
+			}
+
+			.gift:hover {
+				animation: giftShake 0.4s ease-in-out infinite;
+				filter: drop-shadow(0 0 15px var(--gift-glow))
+					drop-shadow(0 8px 15px rgba(0, 0, 0, 0.5));
+			}
+
+			.gift:active {
+				transform: scale(1.05) translateY(-5px);
+				animation: none;
+			}
+
+			@keyframes giftShake {
+				0%,
+				100% {
+					transform: rotate(0deg) translateY(0);
+				}
+				25% {
+					transform: rotate(-8deg) translateY(-3px);
+				}
+				75% {
+					transform: rotate(8deg) translateY(-3px);
+				}
+			}
+
+			/* Animación de flotación diferente para cada uno */
+			.gift:nth-child(1) {
+				animation-delay: 0s;
+			}
+			.gift:nth-child(2) {
+				animation-delay: 1s;
+			}
+			.gift:nth-child(3) {
+				animation-delay: 0.5s;
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			/* --- Modal (Pop-up) --- */
+			.modal-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.3);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 100;
+				opacity: 0;
+				visibility: hidden;
+				transition: all 0.4s ease;
+				backdrop-filter: blur(15px);
+			}
+
+			.modal-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+			.modal-content {
+				background: linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.98) 0%,
+					rgba(230, 250, 255, 0.98) 100%
+				);
+				padding: 40px 30px;
+				border-radius: 25px;
+				width: 90%;
+				max-width: 450px;
+				text-align: center;
+				color: #1a1a4a;
+				box-shadow: 0 0 50px rgba(0, 212, 255, 0.5), 0 20px 60px rgba(0, 0, 0, 0.3);
+				transform: scale(0.5) rotate(-10deg);
+				transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				border: 3px solid var(--evcode-cyan);
+				position: relative;
+				overflow: hidden;
+			}
+
+			/* Efecto de brillo en el modal */
+			.modal-content::before {
+				content: '';
+				position: absolute;
+				top: -50%;
+				left: -50%;
+				width: 200%;
+				height: 200%;
+				background: linear-gradient(
+					45deg,
+					transparent 30%,
+					rgba(0, 212, 255, 0.1) 50%,
+					transparent 70%
+				);
+				animation: modalShine 3s ease-in-out infinite;
+			}
+
+			@keyframes modalShine {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			.modal-overlay.active .modal-content {
+				transform: scale(1) rotate(0deg);
+			}
+
+			/* Imagen del regalo abierto */
+			.modal-gift-image {
+				width: clamp(100px, 30vw, 150px);
+				height: auto;
+				margin: 0 auto 20px;
+				display: block;
+				animation: giftAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				position: relative;
+				z-index: 1;
+				filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+			}
+
+			@keyframes giftAppear {
+				0% {
+					transform: scale(0) rotate(-180deg);
+					opacity: 0;
+				}
+				100% {
+					transform: scale(1) rotate(0deg);
+					opacity: 1;
+				}
+			}
+
+			.modal-icon {
+				font-size: 4rem;
+				margin-bottom: 20px;
+				display: block;
+				animation: bounce 1s ease-in-out infinite;
+				position: relative;
+				z-index: 1;
+			}
+
+			@keyframes bounce {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			.modal-title {
+				font-family: 'VT323', monospace;
+				font-size: clamp(1.8rem, 5vw, 2.5rem);
+				color: var(--evcode-blue);
+				margin-bottom: 15px;
+				text-transform: uppercase;
+				letter-spacing: 3px;
+				text-shadow: 2px 2px 0px rgba(0, 212, 255, 0.3);
+				position: relative;
+				z-index: 1;
+			}
+
+			.modal-text {
+				font-size: clamp(1rem, 3vw, 1.1rem);
+				line-height: 1.8;
+				margin-bottom: 25px;
+				font-weight: 400;
+				color: #2d1b69;
+				position: relative;
+				z-index: 1;
+			}
+
+			.close-btn {
+				background: linear-gradient(135deg, var(--evcode-blue) 0%, #1a1a4a 100%);
+				color: white;
+				border: none;
+				padding: 12px 30px;
+				border-radius: 50px;
+				font-family: 'VT323', monospace;
+				font-size: 1.3rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+				position: relative;
+				z-index: 1;
+				letter-spacing: 2px;
+			}
+
+			.close-btn:hover {
+				background: linear-gradient(135deg, var(--evcode-cyan) 0%, #00a8cc 100%);
+				color: #000;
+				transform: translateY(-2px);
+				box-shadow: 0 7px 20px rgba(0, 212, 255, 0.5);
+			}
+
+			/* --- Footer --- */
+			.footer {
+				position: fixed;
+				bottom: 15px;
+				font-size: 0.9rem;
+				opacity: 0.7;
+				font-family: 'VT323', monospace;
+				text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+				letter-spacing: 1px;
+				z-index: 1;
+			}
+
+			/* Animaciones responsivas */
+			@media (max-width: 480px) {
+				.main-title {
+					font-size: 1.5rem;
+					margin-bottom: 20px;
+				}
+
+				.gifts-container {
+					gap: 10px;
+				}
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Estrellas de fondo -->
+		<div class="stars" id="stars"></div>
+
+		<!-- Estrella Secreta (Easter Egg) -->
+		<div class="secret-star" id="secretStar" onclick="revealSecret(event)"></div>
+
+		<!-- Regalo Secreto Flotante -->
+		<div
+			class="secret-gift"
+			id="secretGift"
+			style="background-image: url('assets/amor.png')"
+		></div>
+
+		<h1 class="main-title">Hay regalos que no<br />caben en una caja... 🎄</h1>
+
+		<div class="snow-globe">
+			<!-- Contenedor para la nieve generada por JS -->
+			<div id="snow-container"></div>
+
+			<!-- El Suelo -->
+			<div class="ground"></div>
+
+			<!-- Árbol de Navidad -->
+			<img src="assets/arbol.png" alt="Árbol de Navidad" class="christmas-tree" />
+
+			<!-- Los Regalos -->
+			<div class="gifts-container">
+				<!-- Regalo 1: Tiempo -->
+				<div
+					class="gift"
+					onclick="openModal(1)"
+					style="background-image: url('assets/tiempo.png')"
+				></div>
+				<!-- Regalo 2: Calma -->
+				<div
+					class="gift"
+					onclick="openModal(2)"
+					style="background-image: url('assets/calma.png')"
+				></div>
+				<!-- Regalo 3: Magia -->
+				<div
+					class="gift"
+					onclick="openModal(3)"
+					style="background-image: url('assets/magia.png')"
+				></div>
+			</div>
+		</div>
+
+		<div class="footer">Un detallito de EvCode 🐧💙</div>
+
+		<!-- El Modal -->
+		<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+			<div class="modal-content">
+				<img id="modalGiftImage" class="modal-gift-image" src="" alt="Regalo abierto" />
+				<h2 class="modal-title" id="modalTitle">Título</h2>
+				<p class="modal-text" id="modalText">Mensaje</p>
+				<button class="close-btn" onclick="closeModalDirect()">Guardar Deseo</button>
+			</div>
+		</div>
+
+		<script>
+			// --- Configuración de Mensajes Mejorados ---
+			const wishes = {
+				1: {
+					title: 'TIEMPO ✨',
+					text:
+						'Deseo que el mundo se detenga un ratito para que puedas respirar... Que tengas tiempo para ti, sin prisas ni relojes... Tiempo para soñar, para reir, para ser feliz... Disfruta cada instante de esta Navidad, porque el mejor regalo es el tiempo compartido con quienes amamos...',
+					image: 'assets/tiempo_abierto.png',
+				},
+				2: {
+					title: 'CALMA 🍃',
+					text:
+						'Deseo que tu mente encuentre silencio en medio del caos... Recuerda.. eres más fuerte de lo que crees, y todo va a estar bien... Respira profundo... Tú puedes con esto y con mucho más... Que la paz y la calma te acompañen siempre, especialmente en esta Navidad...',
+					image: 'assets/calma_abierto.png',
+				},
+				3: {
+					title: 'MAGIA ⭐',
+					text:
+						'Deseo que nunca dejes de brillar, incluso en los días nublados.. Eres capaz de todo lo que te propongas... La magia que está dentro de ti... es la más pura, fuerte y brillante... Que esta Navidad te traiga momentos mágicos y recuerdos inolvidables...',
+					image: 'assets/magia_abierta.png',
+				},
+				secret: {
+					title: 'AMOR INCONDICIONAL 💖',
+					text:
+						'El amor incondicional no conoce el rencor y sabe ser paciente... Es simplemente un amor bonito.. uno que no ata, pero que siempre acompaña... Quería dejarte este secreto aquí, para que si algún día lo encuentras, recuerdes que hay sentimientos que el tiempo no borra... Mi cariño por ti es puro, libre y, sobre todo, sincero... Un amor bonito para ti... Bonita Preciosa💖',
+					image: 'assets/amor_abierto.png',
+				},
+			};
+
+			// --- Generar Estrellas de Fondo ---
+			function createStars() {
+				const starsContainer = document.getElementById('stars');
+				const starCount = 50;
+
+				for (let i = 0; i < starCount; i++) {
+					const star = document.createElement('div');
+					star.classList.add('star');
+
+					// Posición aleatoria
+					star.style.left = Math.random() * 100 + '%';
+					star.style.top = Math.random() * 100 + '%';
+
+					// Tamaño aleatorio
+					const size = Math.random() * 3 + 1 + 'px';
+					star.style.width = size;
+					star.style.height = size;
+
+					// Retraso de animación aleatorio
+					star.style.animationDelay = Math.random() * 3 + 's';
+					star.style.animationDuration = Math.random() * 2 + 2 + 's';
+
+					starsContainer.appendChild(star);
+				}
+			}
+
+			// --- Generar Nieve Mejorada ---
+			function createSnow() {
+				const container = document.querySelector('.snow-globe');
+				const particleCount = 50;
+
+				for (let i = 0; i < particleCount; i++) {
+					const snowflake = document.createElement('div');
+					snowflake.classList.add('snowflake');
+
+					// Posición aleatoria horizontal
+					snowflake.style.left = Math.random() * 100 + '%';
+
+					// Tamaño aleatorio más variado
+					const size = Math.random() * 4 + 2 + 'px';
+					snowflake.style.width = size;
+					snowflake.style.height = size;
+
+					// Velocidad aleatoria
+					snowflake.style.animationDuration = Math.random() * 4 + 3 + 's';
+
+					// Retraso aleatorio
+					snowflake.style.animationDelay = Math.random() * 3 + 's';
+
+					container.appendChild(snowflake);
+				}
+			}
+
+			// --- Lógica del Modal ---
+			const modal = document.getElementById('modalOverlay');
+			const mTitle = document.getElementById('modalTitle');
+			const mText = document.getElementById('modalText');
+			const mGiftImage = document.getElementById('modalGiftImage');
+
+			function openModal(id) {
+				const content = wishes[id];
+				mTitle.innerText = content.title;
+				mText.innerText = content.text;
+				mGiftImage.src = content.image;
+
+				modal.classList.add('active');
+
+				// Prevenir scroll del body
+				document.body.style.overflow = 'hidden';
+			}
+
+			function closeModal(event) {
+				if (event.target === modal) {
+					modal.classList.remove('active');
+					document.body.style.overflow = 'auto';
+				}
+			}
+
+			function closeModalDirect() {
+				modal.classList.remove('active');
+				document.body.style.overflow = 'auto';
+			}
+
+			// Cerrar modal con tecla Escape
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && modal.classList.contains('active')) {
+					closeModalDirect();
+				}
+			});
+
+			// --- Función para revelar el regalo secreto ---
+			function revealSecret(event) {
+				const secretStar = document.getElementById('secretStar');
+				const secretGift = document.getElementById('secretGift');
+
+				// Posicionar el regalo en la ubicación de la estrella
+				const rect = secretStar.getBoundingClientRect();
+				secretGift.style.top = rect.top + 'px';
+				secretGift.style.left = rect.left + 'px';
+
+				// Mostrar el regalo
+				secretGift.classList.add('show');
+
+				// Ocultar la estrella
+				secretStar.style.display = 'none';
+
+				// Después de la animación, abrir el modal
+				setTimeout(() => {
+					openModal('secret');
+					secretGift.classList.remove('show');
+				}, 2000);
+			}
+
+			// --- Inicializar todo ---
+			window.addEventListener('load', () => {
+				createStars();
+				createSnow();
+			});
+		</script>
+	</body>
+</html>
