@@ -660,6 +660,16 @@
 				box-shadow: 0 8px 25px rgba(0, 212, 255, 0.7);
 			}
 
+			/* Imagen del pingüinito en modal final */
+			.final-penguin {
+				width: clamp(80px, 20vw, 120px);
+				height: auto;
+				margin: 20px auto;
+				display: block;
+				animation: bounce 2s ease-in-out infinite;
+				filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+			}
+
 			/* --- Footer --- */
 			.footer {
 				position: fixed;
@@ -780,8 +790,13 @@
 				<div class="final-modal-emoji">🎄✨</div>
 				<h2 class="final-modal-title">Feliz Navidad</h2>
 				<p class="final-modal-text">
-					Te deseo una muy<br />Feliz Navidad...<br />Pasala muy Bonito...
+					Te deseo una muy<br />Feliz Navidad😊...<br />Pasala muy Bonito en Familia 🎄...
 				</p>
+				<img
+					src="assets/pinguinito.png"
+					alt="Pingüinito EvCode"
+					class="final-penguin"
+				/>
 				<button class="final-close-btn" onclick="closeFinalModal()">Cerrar</button>
 			</div>
 		</div>
