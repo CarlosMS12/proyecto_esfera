@@ -571,6 +571,95 @@
 				box-shadow: 0 7px 20px rgba(0, 212, 255, 0.5);
 			}
 
+			/* --- Modal Final de Felicitación --- */
+			.final-modal {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.5);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 200;
+				opacity: 0;
+				visibility: hidden;
+				transition: all 0.5s ease;
+				backdrop-filter: blur(20px);
+			}
+
+			.final-modal.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+			.final-modal-content {
+				background: linear-gradient(
+					135deg,
+					rgba(10, 14, 39, 0.95) 0%,
+					rgba(26, 26, 74, 0.95) 100%
+				);
+				padding: 50px 40px;
+				border-radius: 30px;
+				text-align: center;
+				max-width: 500px;
+				width: 90%;
+				border: 3px solid var(--evcode-cyan);
+				box-shadow: 0 0 60px rgba(0, 212, 255, 0.6), 0 20px 80px rgba(0, 0, 0, 0.5);
+				transform: scale(0.5);
+				transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			}
+
+			.final-modal.active .final-modal-content {
+				transform: scale(1);
+			}
+
+			.final-modal-emoji {
+				font-size: 5rem;
+				margin-bottom: 20px;
+				animation: bounce 1.5s ease-in-out infinite;
+			}
+
+			.final-modal-title {
+				font-family: 'VT323', monospace;
+				font-size: clamp(2rem, 6vw, 3rem);
+				color: var(--evcode-cyan);
+				margin-bottom: 20px;
+				text-transform: uppercase;
+				letter-spacing: 4px;
+				text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 212, 255, 0.5);
+			}
+
+			.final-modal-text {
+				font-family: 'VT323', monospace;
+				font-size: clamp(1.3rem, 4vw, 1.8rem);
+				color: white;
+				line-height: 1.6;
+				margin-bottom: 30px;
+				letter-spacing: 2px;
+			}
+
+			.final-close-btn {
+				background: linear-gradient(135deg, var(--evcode-cyan) 0%, #00a8cc 100%);
+				color: #000;
+				border: none;
+				padding: 15px 40px;
+				border-radius: 50px;
+				font-family: 'VT323', monospace;
+				font-size: 1.5rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4);
+				letter-spacing: 3px;
+				font-weight: bold;
+			}
+
+			.final-close-btn:hover {
+				transform: translateY(-3px) scale(1.05);
+				box-shadow: 0 8px 25px rgba(0, 212, 255, 0.7);
+			}
+
 			/* --- Footer --- */
 			.footer {
 				position: fixed;
@@ -608,6 +697,17 @@
 		</style>
 	</head>
 	<body>
+		<!-- Audios -->
+		<audio id="bgMusic" loop>
+			<source src="assets/music_navidad.mp3" type="audio/mpeg" />
+		</audio>
+		<audio id="shakeSound">
+			<source src="assets/agitar_regalo.mp3" type="audio/mpeg" />
+		</audio>
+		<audio id="openSound">
+			<source src="assets/abrir_regalo.mp3" type="audio/mpeg" />
+		</audio>
+
 		<!-- Estrellas de fondo -->
 		<div class="stars" id="stars"></div>
 
@@ -639,18 +739,24 @@
 				<div
 					class="gift"
 					onclick="openModal(1)"
+					onmouseenter="playShakeSound()"
+					onmouseleave="stopShakeSound()"
 					style="background-image: url('assets/tiempo.png')"
 				></div>
 				<!-- Regalo 2: Calma -->
 				<div
 					class="gift"
 					onclick="openModal(2)"
+					onmouseenter="playShakeSound()"
+					onmouseleave="stopShakeSound()"
 					style="background-image: url('assets/calma.png')"
 				></div>
 				<!-- Regalo 3: Magia -->
 				<div
 					class="gift"
 					onclick="openModal(3)"
+					onmouseenter="playShakeSound()"
+					onmouseleave="stopShakeSound()"
 					style="background-image: url('assets/magia.png')"
 				></div>
 			</div>
@@ -668,7 +774,58 @@
 			</div>
 		</div>
 
+		<!-- Modal Final de Felicitación -->
+		<div class="final-modal" id="finalModal">
+			<div class="final-modal-content">
+				<div class="final-modal-emoji">🎄✨</div>
+				<h2 class="final-modal-title">Feliz Navidad</h2>
+				<p class="final-modal-text">
+					Te deseo una muy<br />Feliz Navidad...<br />Pasala muy Bonito...
+				</p>
+				<button class="final-close-btn" onclick="closeFinalModal()">Cerrar</button>
+			</div>
+		</div>
+
 		<script>
+			// --- Referencias a los audios ---
+			const bgMusic = document.getElementById('bgMusic');
+			const shakeSound = document.getElementById('shakeSound');
+			const openSound = document.getElementById('openSound');
+
+			// Configurar volumen
+			bgMusic.volume = 0.3; // Música de fondo más suave
+			shakeSound.volume = 0.5;
+			openSound.volume = 0.4; // Reducido de 0.7 a 0.4
+
+			// Iniciar música de fondo al primer click del usuario (requerido por navegadores)
+			let musicStarted = false;
+			document.addEventListener(
+				'click',
+				() => {
+					if (!musicStarted) {
+						bgMusic.play().catch((e) => console.log('Audio bloqueado por el navegador'));
+						musicStarted = true;
+					}
+				},
+				{once: true}
+			);
+
+			// Funciones de control de sonido
+			function playShakeSound() {
+				shakeSound.currentTime = 0;
+				shakeSound.play().catch((e) => console.log('Error reproduciendo sonido'));
+			}
+
+			function stopShakeSound() {
+				shakeSound.pause();
+				shakeSound.currentTime = 0;
+			}
+
+			function playOpenSound() {
+				openSound.currentTime = 0;
+				openSound.play().catch((e) => console.log('Error reproduciendo sonido'));
+			}
+
 			// --- Configuración de Mensajes Mejorados ---
 			const wishes = {
 				1: {
@@ -755,14 +912,27 @@
 			const mTitle = document.getElementById('modalTitle');
 			const mText = document.getElementById('modalText');
 			const mGiftImage = document.getElementById('modalGiftImage');
+			const finalModal = document.getElementById('finalModal');
+
+			// Contador de regalos abiertos (sin contar el secreto)
+			let openedGifts = new Set();
+			let finalModalShown = false; // Bandera para mostrar el modal solo una vez
 
 			function openModal(id) {
+				// Reproducir sonido de abrir regalo
+				playOpenSound();
+
 				const content = wishes[id];
 				mTitle.innerText = content.title;
 				mText.innerText = content.text;
 				mGiftImage.src = content.image;
 
 				modal.classList.add('active');
+
+				// Contar solo los regalos principales (1, 2, 3)
+				if (id === 1 || id === 2 || id === 3) {
+					openedGifts.add(id);
+				}
 
 				// Prevenir scroll del body
 				document.body.style.overflow = 'hidden';
@@ -772,11 +942,31 @@
 				if (event.target === modal) {
 					modal.classList.remove('active');
 					document.body.style.overflow = 'auto';
+					checkAllGiftsOpened();
 				}
 			}
 
 			function closeModalDirect() {
 				modal.classList.remove('active');
+				document.body.style.overflow = 'auto';
+				checkAllGiftsOpened();
+			}
+
+			// Verificar si se abrieron los 3 regalos principales
+			function checkAllGiftsOpened() {
+				if (openedGifts.size === 3 && !finalModalShown) {
+					finalModalShown = true; // Marcar que ya se mostró
+					// Esperar un momento antes de mostrar el modal final
+					setTimeout(() => {
+						finalModal.classList.add('active');
+						document.body.style.overflow = 'hidden';
+					}, 500);
+				}
+			}
+
+			// Cerrar modal final
+			function closeFinalModal() {
+				finalModal.classList.remove('active');
 				document.body.style.overflow = 'auto';
 			}
 
